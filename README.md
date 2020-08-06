@@ -9,9 +9,11 @@
 - Analyze audio features and attributes from your favorite tracks
 - Create playlists and find new music
 
-![Example](http://g.recordit.co/SEAqaIVAU1.gif)
+![Example](https://github.com/hbeckmann/Spotifiend/blob/master/public/images/example.gif?raw=true)
 
-##### Development notes
+---
+
+#### Development notes
 
 Due to the smaller nature of the project I have opted to leave many of the components in the Dashboard.js file. Ideally these would be broken out into individual files so that it is easier to navigate and maintain.
 
