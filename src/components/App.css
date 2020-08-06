@@ -1,0 +1,529 @@
+html,body {
+    width: 100%;
+    height: 100%;
+    margin: 0px;
+    padding: 0px;
+    overflow-x: hidden;
+}
+
+.App {
+  display: grid;
+  width: 100%;
+  min-height: 100vh;
+  grid-template-columns: 100%;
+  grid-template-rows: [header] 75px [hero] auto [content] auto;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  background-color: #000;
+  color: #fff;
+  text-decoration: none;
+  font-family: 'Open Sans';
+  font-size: 1.5em;
+}
+
+
+header ul {
+  text-decoration: none;
+  list-style-type: none;
+  margin-top: auto;
+  padding-left: 20px;
+}
+
+header ul li {
+  padding-left: 20px;
+}
+
+header .logo {
+  height: 50px;
+  margin-top: 10px;
+}
+
+header > .logInButton {
+  margin: auto 0px;
+  margin-right: 25px;
+}
+
+.spotButton {
+  border: 0;
+  padding: 15px 30px;
+  font-family: "Montserrat";
+  letter-spacing: 1px;
+  color: #fff;
+  background-color: #1db954;
+  font-size: 14px;
+  line-height: 1;
+  border-radius: 500px;
+  cursor: pointer;
+}
+
+.profileBar {
+  display: flex;
+  align-items: center;
+  margin: 15px;
+  padding: 0px 30px;
+  border: 1px solid #FFFFFF;
+  border-radius: 500px;
+  cursor: pointer;
+  font-family: "Montserrat";
+  font-size: .6em;
+}
+
+.profileBar:hover {
+  background-color: #282828;
+}
+
+.profilePic {
+  height: 30px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.heroSection {
+  display: grid;
+  grid-template-rows: 25% auto;
+  background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 1)), url("./images/concert.jpg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: relative;
+  text-align: center;
+  height: calc(100vh - 75px);
+}
+
+.heroSection h1 {
+  color: #FFFFFF;
+  text-align: center;
+  font-size: 3em;
+  margin: 0px;
+}
+
+.heroSection h3 {
+  color: #FFFFFF;
+  text-align: center;
+  margin-top: 30px;
+}
+
+.heroSection button {
+  font-size: 1em;
+}
+
+.dashboard {
+  display: flex;
+  justify-content: center;
+  background-color: #121212;
+}
+
+.dashboard .container {
+  width: 60%;
+  min-width: 1200px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.dashboard .container h1 {
+  color: #FFFFFF;
+}
+
+.featureContainer {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.audioFeatureList {
+  min-width: 48%;
+  margin: 0 1% 0 1%;
+}
+
+.audioFeatureRow {
+  display: flex;
+  justify-content: space-between;
+  color: white;
+  margin-bottom: 16px;
+  background-color: #282828;
+  border-radius: 10px;
+  padding: 10px 20px 10px 20px;
+  cursor: pointer;
+}
+
+.audioFeatureRow h3 {
+  margin: 0 0 0 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.audioFeatureRow h4 {
+  margin: 0 0 0 0;
+  color: rgb(179, 179, 179);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.audioFeatureRow .featureTitle {
+  margin-left: 16px;
+  max-width: 350px;
+}
+
+.audioFeatureRow .featureLeft {
+  display: flex;
+}
+
+.audioFeatureRow .featureTitle {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.audioFeatureRow .featureValue {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.audioFeatureList .imgContainer img {
+  width: 70px;
+}
+
+.topArtistList {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 0;
+  margin: 0 16px 16px 0;
+  background-color: rgb(40, 40, 40);
+  border-radius: 10px;
+  padding: 20px 20px 16px;
+  cursor: pointer;
+  flex-basis: 160px;
+  flex-grow: 1;
+  overflow: hidden;
+}
+
+.card .cardImgContainer {
+  display: inline-block;
+  position: relative;
+  width: 100%;
+  padding-bottom: 100%; /* Trick for keeping height equal to width */
+  margin-bottom: 16px;
+}
+
+.card .cardImg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.card > .cardText {
+  height: 62px;
+}
+
+.card > .cardText > h3 {
+  font-size: 14px;
+  margin: 0px;
+  color: white;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.card > .cardText > h4 {
+  font-size: 12px;
+  margin: 0px;
+  margin-top: 4px;
+  color: rgb(179, 179, 179);
+  white-space: wrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cardHeader {
+  display: flex;
+  color: #1DB954;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+
+.gradientBG {
+  background-image: linear-gradient(110deg, #6E1D64 10%, #27BAAE 100%);
+}
+
+.musicInfo {
+  min-height: 100vh;
+}
+
+.chartHolder {
+  display: flex;
+  justify-content: center;
+}
+
+.createPlaylistRow {
+  display: flex;
+  margin: 100px 0px 100px 0px;
+  justify-content: center;
+  align-items: center;
+  color: #FFFFFF;
+  min-height: 470px;
+
+}
+
+.createPlaylistRow .textBlock {
+  min-width: 500px;
+}
+
+.createPlaylistRow h1 {
+  font-size: 4em;
+  margin: 0;
+}
+
+.createPlaylistRow h2 {
+  font-size: 1.5em;
+  margin: 0;
+  padding-bottom: 25px;
+}
+
+.createPlaylistButtons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-right: 50px;
+}
+
+.playlistTerms {
+  width: 300px;
+}
+
+.playlistTerms>.termButtons {
+  padding: 0px;
+}
+
+.playlistTerms .active {
+  color: #1db954 !important;
+  border-color: #1db954 !important;
+}
+
+.albumDisplay {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 33%);
+  width: 100%;
+  max-width: 1000px;
+}
+
+.albumDisplay .imgContainer {
+  padding: 0px 10px 10px 0px;
+
+}
+
+.albumDisplay img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.recharts-wrapper svg{
+  overflow: inherit !important;
+}
+
+.termButtons {
+  display: flex;
+  font-size: 12px;
+  padding-right: 20px;
+}
+
+.termButtons .active {
+  border: 1px solid #FFFFFF;
+  color: white;
+  padding: 5px 10px;
+  font-family: "Montserrat";
+  line-height: 1;
+  border-radius: 500px;
+  cursor: pointer;
+}
+
+.termButtons a {
+  cursor: pointer;
+  margin: auto;
+  padding-left: 10px;
+}
+
+.termButtons h4 {
+
+}
+
+.top {
+  margin-top: 40px;
+}
+
+.loadingHolder {
+  background-color: rgb(18,18,18);
+}
+
+a {
+  text-decoration: inherit;
+  color: inherit;
+  cursor: auto;
+}
+
+#slideAnimation {
+    position: relative;
+    left: 200px;
+
+    -webkit-animation: fadein 2s, slide 1s forwards; /* Safari, Chrome and Opera > 12.1 */
+   -moz-animation: fadein 2s, slide 1s forwards; /* Firefox < 16 */
+    -ms-animation: fadein 2s, slide 1s forwards; /* Internet Explorer */
+     -o-animation: fadein 2s, slide 1s forwards; /* Opera < 12.1 */
+        animation: fadein 2s, slide 1s forwards;
+}
+
+@-webkit-keyframes slide {
+    100% { left: 0; }
+}
+
+@keyframes slide {
+    100% { left: 0; }
+}
+
+@keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+/* Firefox < 16 */
+@-moz-keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+/* Safari, Chrome and Opera > 12.1 */
+@-webkit-keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+/* Internet Explorer */
+@-ms-keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+@media only screen and (max-width: 1200px) {
+
+
+  header {
+    width: 100%;
+  }
+
+  header ul {
+    padding-left: 10px;
+  }
+
+  header a {
+    justify-items: end;
+    justify-content: end;
+  }
+
+  .dashboard .container {
+      width: 100%;
+      min-width: 360px;
+  }
+
+  .audioFeatureRow .featureTitle {
+    max-width: 230px;
+  }
+
+  .top {
+    margin-top: 10px;
+  }
+
+  .termButtons {
+    font-size: 10px;
+  }
+
+}
+
+@media only screen and (max-width: 1000px) {
+
+  .audioFeatureList {
+    min-width: 98%;
+    margin: 0 1% 0 1%;
+  }
+
+  .createPlaylistRow {
+    flex-wrap: wrap;
+    margin-top: 0px;
+  }
+
+  .createPlaylistRow .imgContainer {
+    min-height: 211px;
+  }
+
+  .createPlaylistRow .textBlock {
+    min-width: 100%;
+    text-align: center;
+    margin: 50px 0px;
+  }
+
+  .createPlaylistButtons {
+    padding: 0px;
+  }
+
+  .chartHolder {
+    margin: auto;
+    width: 60%;
+  }
+
+  .albumDisplay {
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  }
+
+}
+
+@media only screen and (max-width: 656px) {
+
+  header .logo {
+    height: 30px;
+    margin-top: 25px;
+  }
+
+  .createPlaylistRow {
+    margin-top: 0px;
+  }
+
+  .cardHeader h1 {
+    font-size: 25px;
+  }
+
+  .albumDisplay {
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  }
+
+  header .spotButton {
+    font-size: 8px;
+  }
+
+  .spotButton {
+    padding: 10px 20px;
+    font-size: 12px;
+  }
+
+  .heroText {
+    font-size: 10px;
+  }
+
+  .termButtons h4 {
+    text-align: center;
+  }
+
+
+}
