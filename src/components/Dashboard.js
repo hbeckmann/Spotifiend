@@ -5,6 +5,7 @@ import TermButtons from './common/TermButtons';
 import { CardList } from './common/Cards';
 import CreatePlaylistRow from './common/CreatePlaylistRow';
 import { AudioFeatureList } from './common/AudioFeatures';
+import AUDIO_FEATURES from '../data/audioFeatures';
 
 function Dashboard(props) {
 
@@ -16,6 +17,8 @@ function Dashboard(props) {
     const toastOptions = {
         autoClose: 8000
     }
+
+    const trackAudioDataExists = props.topTracks[props.selectedTrackTerm].length > 0 && props.topTracks[props.selectedTrackTerm][0].audio_features;
 
     const handleTokenExpired = () => {
         props.toast.warn("Token has expired. Please sign in again.", toastOptions);
@@ -268,7 +271,7 @@ function Dashboard(props) {
 
         }
     }, [props.accessToken])
-
+    
     return (
         <>
             <div className="dashboard musicInfo">
@@ -292,12 +295,14 @@ function Dashboard(props) {
                         {props.topTracks[props.selectedTrackTerm].length > 0 ? <CardList cardList={props.topTracks[props.selectedTrackTerm]} accessToken={props.accessToken} trackList={true} /> : ""}
                     </div>
                     <div className="featureContainer">
-                        {props.topTracks[props.selectedTrackTerm].length > 0 && props.topTracks[props.selectedTrackTerm][0].audio_features ? <AudioFeatureList topTracks={props.topTracks[props.selectedTrackTerm]} title={"Best Danceability"} feature={"danceability"} /> : ""}
-                        {props.topTracks[props.selectedTrackTerm].length > 0 && props.topTracks[props.selectedTrackTerm][0].audio_features ? <AudioFeatureList topTracks={props.topTracks[props.selectedTrackTerm]} title={"Highest Energy"} feature={"energy"} /> : ""}
-                        {props.topTracks[props.selectedTrackTerm].length > 0 && props.topTracks[props.selectedTrackTerm][0].audio_features ? <AudioFeatureList topTracks={props.topTracks[props.selectedTrackTerm]} title={"Fastest Tempo"} feature={"tempo"} /> : ""}
-                        {props.topTracks[props.selectedTrackTerm].length > 0 && props.topTracks[props.selectedTrackTerm][0].audio_features ? <AudioFeatureList topTracks={props.topTracks[props.selectedTrackTerm]} title={"Loudest Tracks"} feature={"loudness"} /> : ""}
-                        {props.topTracks[props.selectedTrackTerm].length > 0 && props.topTracks[props.selectedTrackTerm][0].audio_features ? <AudioFeatureList topTracks={props.topTracks[props.selectedTrackTerm]} title={"Most Upbeat"} feature={"valence"} /> : ""}
-                        {props.topTracks[props.selectedTrackTerm].length > 0 && props.topTracks[props.selectedTrackTerm][0].audio_features ? <AudioFeatureList topTracks={props.topTracks[props.selectedTrackTerm]} title={"Highest Speechiness"} feature={"speechiness"} /> : ""}
+                        { trackAudioDataExists ?
+                            AUDIO_FEATURES.map(({ title, feature}) => {
+                                return (
+                                    <AudioFeatureList topTracks={props.topTracks[props.selectedTrackTerm]} title={title} feature={feature} />   
+                                );
+                            })
+                            : ""
+                        }
                     </div>
                 </div>
             </div>
