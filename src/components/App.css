@@ -1,3 +1,7 @@
+button {
+  all: unset;
+}
+
 html,body {
     width: 100%;
     height: 100%;
@@ -308,6 +312,10 @@ header > .logInButton {
   padding: 0px;
 }
 
+.termButtons > button {
+  padding: 0px 5px 0px 5px;
+}
+
 .playlistTerms .active {
   color: #1db954 !important;
   border-color: #1db954 !important;
@@ -355,10 +363,6 @@ header > .logInButton {
   cursor: pointer;
   margin: auto;
   padding-left: 10px;
-}
-
-.termButtons h4 {
-
 }
 
 .top {
