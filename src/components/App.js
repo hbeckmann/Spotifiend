@@ -1,87 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useContext } from 'react';
 import LoadingBar from 'react-top-loading-bar';
 import CookieConsent from 'react-cookie-consent';
-import { ToastContainer, toast } from 'react-toastify';
-import termDefaults from '../data/terms';
+import { ToastContainer } from 'react-toastify';
 import './App.css';
 import Header from './common/Header';
-import Hero from './Hero';
-import Dashboard from './Dashboard';
 import 'react-toastify/dist/ReactToastify.css';
-
+import { DashboardContext } from '../context/DashboardContext';
 
 function App() {
-    const [userProfile, setUserProfile] = useState({});
-    const [accessToken, setAccessToken] = useState("");
-    const [tokenActive, setTokenActive] = useState(false);
-    const [selectedArtistTerm, setSelectedArtistTerm] = useState("medium_term");
-    const [selectedTrackTerm, setSelectedTrackTerm] = useState("medium_term");
-    const [selectedPlaylistTerm, setSelectedPlaylistTerm] = useState("medium_term");
-    const [topArtists, setTopArtists] = useState(termDefaults);
-    const [topTracks, setTopTracks] = useState(termDefaults);
-    const [recommendedTracks, setRecommendedTracks] = useState(termDefaults);
-    const [loadingProgress, setLoadingProgress] = useState(0);
 
-    const onLoaderFinished = () => {
-        setLoadingProgress(0)
-    }
-
-    let mainContent;
-    if (userProfile.display_name !== undefined && tokenActive) {
-        mainContent = <Dashboard
-            userProfile={userProfile}
-            accessToken={accessToken}
-            selectedArtistTerm={selectedArtistTerm}
-            setSelectedArtistTerm={setSelectedArtistTerm}
-            selectedTrackTerm={selectedTrackTerm}
-            setSelectedTrackTerm={setSelectedTrackTerm}
-            selectedPlaylistTerm={selectedPlaylistTerm}
-            setSelectedPlaylistTerm={setSelectedPlaylistTerm}
-            topArtists={topArtists}
-            setTopArtists={setTopArtists}
-            topTracks={topTracks}
-            setTopTracks={setTopTracks}
-            recommendedTracks={recommendedTracks}
-            setRecommendedTracks={setRecommendedTracks}
-            setTokenActive={setTokenActive}
-            toast={toast}
-            loadingProgress={loadingProgress}
-            setLoadingProgress={setLoadingProgress}
-            onLoaderFinished={onLoaderFinished} />
-    } else {
-        mainContent = <Hero setLoadingProgress={setLoadingProgress} />
-    }
-
-
-    useEffect(() => {
-        const parsedHash = new URLSearchParams(window.location.hash.substr(1));
-        const accessToken = parsedHash.get('access_token');
-        if (accessToken) {
-            console.log(accessToken);
-            setAccessToken(accessToken);
-            setTokenActive(true);
-            fetch("https://api.spotify.com/v1/me", {
-                headers: {
-                    "Authorization": "Bearer " + accessToken,
-                    'Content-Type': 'application/json'
-                }
-            })
-                .then(response => {
-                    if (response.status === 401) {
-                        toast.warn("Token has expired. Please sign in again.", { autoClose: 8000 });
-                        setTokenActive(false);
-                    }
-                    return response.json()
-                })
-                .then(data => {
-                    console.log(data);
-                    setUserProfile(data);
-                })
-                .catch((error) => {
-                    console.error('Error: ', error);
-                })
-        }
-    }, [])
+    const { mainContent, userProfile, tokenActive, setLoadingProgress, loadingProgress, onLoaderFinished } = useContext(DashboardContext);
 
     return (
         <div className="App">

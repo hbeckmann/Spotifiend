@@ -1,28 +1,45 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import SpotChart from './SpotChart.js';
+import { toast } from 'react-toastify';
 import termDefaults from '../data/terms';
 import TermButtons from './common/TermButtons';
 import { CardList } from './common/Cards';
 import CreatePlaylistRow from './common/CreatePlaylistRow';
 import { AudioFeatureList } from './common/AudioFeatures';
 import AUDIO_FEATURES from '../data/audioFeatures';
+import { DashboardContext } from '../context/DashboardContext';
 
-function Dashboard(props) {
-
-    let loadingProgress = props.loadingProgress;
-    let setLoadingProgress = props.setLoadingProgress;
-    let onLoaderFinished = props.onLoaderFinished;
+function Dashboard() {
+    const {
+        userProfile,
+        accessToken,
+        setTokenActive,
+        selectedArtistTerm,
+        setSelectedArtistTerm,
+        selectedTrackTerm,
+        setSelectedTrackTerm,
+        selectedPlaylistTerm,
+        setSelectedPlaylistTerm,
+        topArtists,
+        setTopArtists,
+        topTracks,
+        setTopTracks,
+        recommendedTracks,
+        setRecommendedTracks,
+        loadingProgress,
+        setLoadingProgress,
+     } = useContext(DashboardContext);
 
     const [genreData, setGenreData] = useState(termDefaults);
     const toastOptions = {
         autoClose: 8000
     }
 
-    const trackAudioDataExists = props.topTracks[props.selectedTrackTerm].length > 0 && props.topTracks[props.selectedTrackTerm][0].audio_features;
+    const trackAudioDataExists = topTracks[selectedTrackTerm].length > 0 && topTracks[selectedTrackTerm][0].audio_features;
 
     const handleTokenExpired = () => {
-        props.toast.warn("Token has expired. Please sign in again.", toastOptions);
-        props.setTokenActive(false);
+        toast.warn("Token has expired. Please sign in again.", toastOptions);
+        setTokenActive(false);
     }
 
     const compileGenreData = (data, term) => {
@@ -53,17 +70,17 @@ function Dashboard(props) {
             }
         }
 
-        if (type === "artists" && props.topArtists[term].length > 0) {
-            props.setSelectedArtistTerm(term);
+        if (type === "artists" && topArtists[term].length > 0) {
+            setSelectedArtistTerm(term);
             setLoadingProgress(100);
             return
         }
 
-        if (type === "tracks" && props.topTracks[term].length > 0) {
+        if (type === "tracks" && topTracks[term].length > 0) {
             if (settings.playlist) {
-                props.setSelectedPlaylistTerm(term);
+                setSelectedPlaylistTerm(term);
             } else {
-                props.setSelectedTrackTerm(term);
+                setSelectedTrackTerm(term);
             }
             setLoadingProgress(100);
             return
@@ -92,25 +109,25 @@ function Dashboard(props) {
             })
             .then(data => {
                 if (type === "artists") {
-                    let updatedTopArtists = { ...props.topArtists };
+                    let updatedTopArtists = { ...topArtists };
                     updatedTopArtists[term] = data.items;
-                    props.setTopArtists(updatedTopArtists);
-                    props.setSelectedArtistTerm(term);
+                    setTopArtists(updatedTopArtists);
+                    setSelectedArtistTerm(term);
                     getArtistRecommendations(data.items, token, term);
                     compileGenreData(data, term);
                     setLoadingProgress(100);
                 }
 
                 if (type === "tracks") {
-                    let updatedTopTracks = { ...props.topTracks };
+                    let updatedTopTracks = { ...topTracks };
                     updatedTopTracks[term] = data.items;
-                    props.setTopTracks(updatedTopTracks);
+                    setTopTracks(updatedTopTracks);
                     if (settings.playlist) {
-                        props.setSelectedPlaylistTerm(term);
+                        setSelectedPlaylistTerm(term);
                     } else {
-                        props.setSelectedTrackTerm(term);
+                        setSelectedTrackTerm(term);
                     }
-                    getTrackAudioFeatures(data.items, updatedTopTracks, token, term); //have to pass the updatedTopTracks instead of using props.topTracks later because the closure won't update
+                    getTrackAudioFeatures(data.items, updatedTopTracks, token, term); //have to pass the updatedTopTracks instead of using topTracks later because the closure won't update
                     setLoadingProgress(100);
                 }
 
@@ -189,7 +206,7 @@ function Dashboard(props) {
             })
             .then(data => {
                 setLoadingProgress(100);
-                props.toast.success("Playlist created!", toastOptions);
+                toast.success("Playlist created!", toastOptions);
 
             })
             .catch((error) => {
@@ -218,13 +235,13 @@ function Dashboard(props) {
                 if (data.error && data.error.status === 400) { //Stop if invalid request
                     return
                 }
-                let updatedRecommendedTracks = { ...props.recommendedTracks };
+                let updatedRecommendedTracks = { ...recommendedTracks };
                 let updatedRecommendedTracksWithTerm = updatedRecommendedTracks[term].concat(data.tracks);
                 updatedRecommendedTracks[term] = Array.from(new Set(updatedRecommendedTracksWithTerm.map(a => a.id)))
                     .map(id => {
                         return updatedRecommendedTracksWithTerm.find(a => a.id === id)
                     }); //Create new array of only unique ids. Use ids to filter out duplicate objects.
-                props.setRecommendedTracks(updatedRecommendedTracks);
+                setRecommendedTracks(updatedRecommendedTracks);
             })
             .catch((error) => {
                 console.error('Error: ', error);
@@ -254,7 +271,7 @@ function Dashboard(props) {
                 }
                 let updatedTopTracks = { ...topTracks };
                 updatedTopTracks[term] = updatedTopTracks[term].map((item, index) => { return { ...item, audio_features: data.audio_features[index] } });
-                props.setTopTracks(updatedTopTracks); //append audio feature data to topTracks list
+                setTopTracks(updatedTopTracks); //append audio feature data to topTracks list
             })
             .catch((error) => {
                 console.error('Error: ', error);
@@ -264,41 +281,41 @@ function Dashboard(props) {
 
     useEffect(() => {
 
-        if (props.accessToken) {
+        if (accessToken) {
 
-            getMusicInfo('artists', props.selectedArtistTerm, props.accessToken, { recommendation: true });
-            getMusicInfo('tracks', props.selectedTrackTerm, props.accessToken, {});
+            getMusicInfo('artists', selectedArtistTerm, accessToken, { recommendation: true });
+            getMusicInfo('tracks', selectedTrackTerm, accessToken, {});
 
         }
-    }, [props.accessToken])
-    
+    }, [accessToken])
+
     return (
         <>
             <div className="dashboard musicInfo">
                 <div className="container" id="slideAnimation">
                     <div className="cardHeader">
                         <h1 className="top"> My Top Artists </h1>
-                        <TermButtons getMusicInfo={getMusicInfo} accessToken={props.accessToken} setTopArtists={props.setTopArtists} topArtists={props.topArtists} setSelectedTerm={props.setSelectedArtistTerm} setLoadingProgress={setLoadingProgress} type="artists" />
+                        <TermButtons getMusicInfo={getMusicInfo} accessToken={accessToken} setTopArtists={setTopArtists} topArtists={topArtists} setSelectedTerm={setSelectedArtistTerm} setLoadingProgress={setLoadingProgress} type="artists" />
                     </div>
                     <div className="topArtistList">
-                        {props.topArtists[props.selectedArtistTerm].length > 0 ? <CardList cardList={props.topArtists[props.selectedArtistTerm]} accessToken={props.accessToken} trackList={false} /> : ""}
+                        {topArtists[selectedArtistTerm].length > 0 ? <CardList cardList={topArtists[selectedArtistTerm]} accessToken={accessToken} trackList={false} /> : ""}
                     </div>
                     <div className="cardHeader">
                         <h1 className="top"> My Top Genres </h1>
                     </div>
-                    <SpotChart genreData={genreData[props.selectedArtistTerm]} />
+                    <SpotChart genreData={genreData[selectedArtistTerm]} />
                     <div className="cardHeader">
                         <h1 className="top"> My Top Tracks </h1>
-                        <TermButtons getMusicInfo={getMusicInfo} accessToken={props.accessToken} setTopTracks={props.setTopTracks} topTracks={props.topTracks} setSelectedTerm={props.setSelectedTrackTerm} setLoadingProgress={setLoadingProgress} type="tracks" />
+                        <TermButtons getMusicInfo={getMusicInfo} accessToken={accessToken} setTopTracks={setTopTracks} topTracks={topTracks} setSelectedTerm={setSelectedTrackTerm} setLoadingProgress={setLoadingProgress} type="tracks" />
                     </div>
                     <div className="topArtistList">
-                        {props.topTracks[props.selectedTrackTerm].length > 0 ? <CardList cardList={props.topTracks[props.selectedTrackTerm]} accessToken={props.accessToken} trackList={true} /> : ""}
+                        {topTracks[selectedTrackTerm].length > 0 ? <CardList cardList={topTracks[selectedTrackTerm]} accessToken={accessToken} trackList={true} /> : ""}
                     </div>
                     <div className="featureContainer">
                         { trackAudioDataExists ?
                             AUDIO_FEATURES.map(({ title, feature}) => {
                                 return (
-                                    <AudioFeatureList topTracks={props.topTracks[props.selectedTrackTerm]} title={title} feature={feature} />   
+                                    <AudioFeatureList topTracks={topTracks[selectedTrackTerm]} title={title} feature={feature} />   
                                 );
                             })
                             : ""
@@ -306,14 +323,14 @@ function Dashboard(props) {
                     </div>
                 </div>
             </div>
-            <CreatePlaylistRow topTracks={props.topTracks} selectedTrackTerm={props.selectedTrackTerm} selectedPlaylistTerm={props.selectedPlaylistTerm} loadingProgress={loadingProgress} setLoadingProgress={setLoadingProgress} createPlaylist={createPlaylist} getMusicInfo={getMusicInfo} accessToken={props.accessToken} userProfile={props.userProfile} setSelectedTerm={props.setSelectedTrackTerm} setLoadingProgress={setLoadingProgress} />
+            <CreatePlaylistRow topTracks={topTracks} selectedTrackTerm={selectedTrackTerm} selectedPlaylistTerm={selectedPlaylistTerm} loadingProgress={loadingProgress} setLoadingProgress={setLoadingProgress} createPlaylist={createPlaylist} getMusicInfo={getMusicInfo} accessToken={accessToken} userProfile={userProfile} setSelectedTerm={setSelectedTrackTerm} />
             <div className="dashboard">
                 <div className="container" id="slideAnimation">
                     <div className="cardHeader">
                         <h1 className="top"> Songs You May Enjoy </h1>
                     </div>
                     <div className="topArtistList">
-                        {props.recommendedTracks[props.selectedArtistTerm].length > 0 ? <CardList cardList={props.recommendedTracks[props.selectedArtistTerm]} accessToken={props.accessToken} trackList={true} recommended={true} getArtistRecommendations={() => getArtistRecommendations(props.topArtists[props.selectedArtistTerm], props.accessToken, props.selectedArtistTerm)} /> : ""}
+                        {recommendedTracks[selectedArtistTerm].length > 0 ? <CardList cardList={recommendedTracks[selectedArtistTerm]} accessToken={accessToken} trackList={true} recommended={true} getArtistRecommendations={() => getArtistRecommendations(topArtists[selectedArtistTerm], accessToken, selectedArtistTerm)} /> : ""}
                     </div>
                 </div>
             </div>
