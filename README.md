@@ -13,10 +13,6 @@
 
 ---
 
-#### Development notes
-
-Due to the smaller nature of the project I have opted to leave many of the components in the Dashboard.js file. Ideally these would be broken out into individual files so that it is easier to navigate and maintain.
-
 Potential future improvements:
 
 - Example page for users who don't currently have a Spotify account
